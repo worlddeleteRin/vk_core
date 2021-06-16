@@ -35,11 +35,10 @@ class VkWall():
 		method = "wall.get?"
 		params = f"owner_id=-{self.owner_id}&count={count}&filter=owner" + self.client.default_params()
 		request_url = self.client.api_url + method + params
-		print('request url is', request_url)
 		response = requests.get(request_url).json()
 		if 'error' in response.keys():
 			print('error while get post \n', response)
-			# return None
+			return None
 		else:
 			for post in response['response']['items']:
 				current_post = VkGroupPost(self.client, post)
@@ -49,11 +48,11 @@ class VkWall():
 		method = 'wall.post'
 		params = f"?owner_id=-{self.owner_id}"\
 		f"&from_group={post.from_group}"\
-		f"&message={post.message}"\
 		f"&attachments={post.get_attachments_str()}"\
 		+ self.client.default_params()
+		if post.message:
+			params += f"&message={post.message}"
 		request = self.client.api_url + method + params
-		print('request url is', request)
 		response = requests.get(request).json()
 		print('add post response is', response)
 	def delete_post(self, post_id):
@@ -72,11 +71,12 @@ class Post():
 	from_group = 1 # 1 - from group, 0 - from user
 	def __init__(self, message = None):
 		self.message = message
+		self.attachmets = []
 	def get_attachments_str(self):
 		return ','.join(self.attachments)
 
 class VkGroupPost():
-	# create vk group post object from opst_response	
+	# create vk group post object from post_response	
 	def __init__(self, client, post_response):
 		self.response = post_response
 		self.client = client
@@ -109,7 +109,6 @@ class VkGroupPost():
 		if group_id:
 			params += f'&group_id={group_id}'
 		request_url = self.client.api_url + method + params
-		print('request url reply is \n ', request_url)
 		response = requests.get(request_url).json()
 		print('response repost is: \n', response)
 	def download_attachments(self):
@@ -210,7 +209,9 @@ class Photos():
 		if not self.photo_src:
 			print('specify photo src')
 			return None
-		if 'http' in self.photo_src:
+		if isinstance(self.photo_src, bytes):
+			photo_content = self.photo_src
+		elif 'http' in self.photo_src:
 			photo_content = requests.get(self.photo_src).content
 		else:
 			photo_content = open(self.photo_src, 'rb').read()
@@ -227,7 +228,6 @@ class Photos():
 		if 'error' in response:
 			print('error when save wall photo, response is', response)
 		else:
-			print(response)
 			self.photo_id = response["response"][0]["id"]
 			self.photo_owner_id = response["response"][0]["owner_id"]
 
@@ -246,4 +246,3 @@ class Photos():
 		image_file = ('file.png', current_photo, 'multipart/form-data')
 		response = requests.post(self.upload_url, files = {"photo": image_file }).json()
 		self.upload_response = response
-		print('response is', response)
