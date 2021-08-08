@@ -1,20 +1,23 @@
 import requests
 import json
-import pandas as pd
+#import pandas as pd
 import time
-import random
-import sys
+#import random
+#import sys
 
 
 class VkClient():
-	api_v = 5.126
-	api_url = "https://api.vk.com/method/"
-	access_token = None
 
-	def __init__(self):
-		pass
-	def request_token_url(self):
-		app_id = 7709111
+	def __init__(self,
+			api_v=5.126,
+			api_url="https://api.vk.com/method/",
+			access_token=None,
+		):
+		self.api_v = api_v
+		self.api_url = api_url
+		self.access_token = access_token
+
+	def request_token_url(self, app_id=7709111):
 		return f'https://oauth.vk.com/authorize?client_id={app_id}&redirect_uri=https://oauth.vk.com/blank.html&display=popup&scope=notify+friends+photos+status+wall+offline+groups+stats+email+market&response_type=token&revoke=1'
 	def configure(self, access_token):
 		self.access_token = access_token
