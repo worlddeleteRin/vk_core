@@ -9,9 +9,9 @@ import time
 class VkClient():
 
 	def __init__(self,
+			access_token,
 			api_v=5.126,
 			api_url="https://api.vk.com/method/",
-			access_token=None,
 		):
 		self.api_v = api_v
 		self.api_url = api_url
@@ -19,8 +19,6 @@ class VkClient():
 
 	def request_token_url(self, app_id=7709111):
 		return f'https://oauth.vk.com/authorize?client_id={app_id}&redirect_uri=https://oauth.vk.com/blank.html&display=popup&scope=notify+friends+photos+status+wall+offline+groups+stats+email+market&response_type=token&revoke=1'
-	def configure(self, access_token):
-		self.access_token = access_token
 	def default_params(self):
 		return f"&access_token={self.access_token}&v={self.api_v}"
 
@@ -86,7 +84,7 @@ class VkGroupPost():
 		self.id = post_response['id']
 		self.from_id = post_response['from_id']
 		self.owner_id = post_response['owner_id']
-		self.owner_id_clean = abs(self.owner_id)
+		self.group info owner_id_clean = abs(self.owner_id)
 		self.date = post_response['date']
 		self.marked_as_ads = post_response['marked_as_ads']
 		self.type = post_response['post_type']
@@ -143,8 +141,7 @@ class VkGroups():
 			print('error while get groups Members, response is', response)
 			return None
 		return response["response"]["items"]
-	def getMembersAll(self):
-		members_limit = 1000
+	def getMembersAll(self, members_limit=1000):
 		members_count = self.getMembersCount()
 		need_requests = int(members_count / members_limit)
 		offset = 0
@@ -167,8 +164,7 @@ class VkGroups():
 		if info:
 			return info["members_count"]
 		return None
-	def getById(self):
-		fields = 'members_count'
+	def getById(self, fields="members_count"):
 		method = 'groups.getById'
 		params = f"?group_id={self.group_id}"\
 		f"&fields={fields}"\
@@ -176,7 +172,7 @@ class VkGroups():
 		request = self.client.api_url + method + params
 		response = requests.get(request).json()
 		if 'error' in response:
-			print('erorr while get product by id, response is', response)
+			print('erorr while get group info by id, response is', response)
 			return None
 		return response["response"][0]
 
