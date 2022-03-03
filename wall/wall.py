@@ -10,30 +10,30 @@ class VkPost(BaseModel):
     owner_id: int
     # post author id
     from_id: int
-    created_by: int
+    created_by: Optional[int] = None
     # date in unixtime
     date: int
     # post body text
     text: str   
-    reply_owner_id: int
-    reply_post_id: int
-    friends_only: int
+    reply_owner_id: Optional[int]
+    reply_post_id: Optional[int]
+    friends_only: Optional[int]
     comments: dict
-    copyright: dict
+    copyright: Optional[dict]
     likes: dict
     reposts: dict
-    views: dict
+    views: Optional[dict]
     # TODO: add enum
     post_type: str
     post_source: dict
     attachments: list = []
-    geo: dict
-    signer_id: int
+    geo: Optional[dict]
+    signer_id: Optional[int]
     copy_history: list = []
-    can_pin: int
-    can_delete: int
-    can_edit: int
-    is_pinned: int
+    can_pin: Optional[int]
+    can_delete: Optional[int]
+    can_edit: Optional[int]
+    is_pinned: Optional[int]
     marked_as_ads: int
     is_favorite: bool
     donut: dict
@@ -83,7 +83,7 @@ class VkWall():
             query.domain = self.domain
 
         resp_raw: Response = self.client.http.client.get(
-            url = '/wall/get',
+            url = '/wall.get',
             params = query.dict(exclude_none=True)
         )
         resp = self.client.http.process_response(resp_raw)
@@ -97,4 +97,9 @@ class VkWall():
                 )
                 return data
         raise Exception('unhandled error while getting posts')
+
+    def getById(
+        self
+    ):
+        pass
 

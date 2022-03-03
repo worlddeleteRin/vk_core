@@ -25,8 +25,12 @@ class BaseVkError(BaseModel):
     def get_dummy_from_response(
         response: Response
     ):
+        error = f'{response.json()}'
+        response_log = f'{response.json()}'
+        request_log = f'{response.request}'
+        error += f'{response_log} {request_log}'
         return BaseVkError(
-            error_msg = f'response.json()'
+            error_msg = error
         )
 
     class Config:
