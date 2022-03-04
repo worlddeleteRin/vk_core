@@ -2,7 +2,7 @@ from typing import Optional
 from pydantic import BaseModel
 from vk_core.client import VkClient
 from httpx import Response
-from vk_core.models import BaseVkError, BaseVkResponse
+from vk_core.models import BaseVkErrorException, BaseVkResponse
 
 class VkPost(BaseModel):
     id: int
@@ -86,17 +86,11 @@ class VkWall():
             url = '/wall.get',
             params = query.dict(exclude_none=True)
         )
-        resp = self.client.http.process_response(resp_raw)
-        if isinstance(resp, BaseVkError):
-            resp.raise_error()
-        if isinstance(resp, BaseVkResponse):
-            resp_data = resp.response
-            if isinstance(resp_data, dict):
-                data = WallPostsResponse(
-                    **resp_data
-                )
-                return data
-        raise Exception('unhandled error while getting posts')
+        resp = self.client.http.process_response(resp_raw).response
+        data = WallPostsResponse(
+            **resp
+        )
+        return data
 
     def getById(
         self

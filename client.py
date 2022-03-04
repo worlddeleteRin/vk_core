@@ -4,7 +4,7 @@ import time
 
 from httpx import Client, Response
 
-from vk_core.models import BaseVkError, BaseVkResponse
+from vk_core.models import BaseVkErrorException, BaseVkResponse
 
 class HttpModule():
     is_debug: bool = True
@@ -19,23 +19,23 @@ class HttpModule():
     def process_response (
         self,
         response: Response
-    ) -> BaseVkResponse | BaseVkError:
+    ) -> BaseVkResponse:
         response_dict = dict(response.json())
         if response.status_code != 200:
             response_error = response_dict.get('error')
             if isinstance(response_error, dict):
-                error = BaseVkError(
+                error = BaseVkErrorException(
                     response = response,
                     **response_error 
                 )
             else:
-                error = BaseVkError.get_dummy_from_response(
+                error = BaseVkErrorException.get_dummy_from_response(
                     response
                 )
-            return error
+            raise error
         response_success = response_dict.get('response')
         if not isinstance(response_success, dict):
-            return BaseVkError.get_dummy_from_response(response)
+            raise BaseVkErrorException.get_dummy_from_response(response)
         else:
             return BaseVkResponse(
                 response = response_success

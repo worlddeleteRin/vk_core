@@ -4,12 +4,22 @@ from typing import Any, Optional, Union
 from httpx import Response
 
 class BaseVkResponse(BaseModel):
-    response: Any
+    response: dict
 
-class BaseVkError(BaseModel):
+class BaseVkErrorException(Exception):
     response: Optional[Response] = None
-    error_code: Union[int, str] = 0
-    error_msg: str = 'unknown error'
+    error_code: Optional[Union[int, str]] = None
+    error_msg: str
+
+    def __init__(
+        self,
+        response: Response = None,
+        error_code = None,
+        error_msg: str = 'unknown error'
+    ):
+        self.response = response
+        self.error_code = error_code
+        self.error_msg = error_msg
 
     def raise_error(self):
         error =  f'{self.error_code} {self.error_msg}'
@@ -29,10 +39,6 @@ class BaseVkError(BaseModel):
         response_log = f'{response.json()}'
         request_log = f'{response.request}'
         error += f'{response_log} {request_log}'
-        return BaseVkError(
+        return BaseVkErrorException(
             error_msg = error
         )
-
-    class Config:
-        arbitrary_types_allowed = True
-
