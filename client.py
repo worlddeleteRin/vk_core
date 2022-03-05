@@ -34,12 +34,9 @@ class HttpModule():
                 )
             raise error
         response_success = response_dict.get('response')
-        if not isinstance(response_success, dict):
-            raise BaseVkErrorException.get_dummy_from_response(response)
-        else:
-            return BaseVkResponse(
-                response = response_success
-            )
+        return BaseVkResponse(
+            response = response_success
+        )
         
 
 class VkClient():

@@ -4,25 +4,26 @@ from typing import Any, Optional, Union
 from httpx import Response
 
 class BaseVkResponse(BaseModel):
-    response: dict
+    response: Any
 
 class BaseVkErrorException(Exception):
     response: Optional[Response] = None
     error_code: Optional[Union[int, str]] = None
-    error_msg: str
+    message: str
 
     def __init__(
         self,
         response: Response = None,
         error_code = None,
-        error_msg: str = 'unknown error'
+        message: str = 'unknown error'
     ):
         self.response = response
         self.error_code = error_code
-        self.error_msg = error_msg
+        self.message = message
+        super().__init__(self.message)
 
     def raise_error(self):
-        error =  f'{self.error_code} {self.error_msg}'
+        error =  f'{self.error_code} {self.message}'
         if self.response:
             response_log = f'{self.response.json()}'
             request_log = f'{self.response.request}'
@@ -35,10 +36,17 @@ class BaseVkErrorException(Exception):
     def get_dummy_from_response(
         response: Response
     ):
-        error = f'{response.json()}'
+        error = ''
         response_log = f'{response.json()}'
         request_log = f'{response.request}'
         error += f'{response_log} {request_log}'
         return BaseVkErrorException(
-            error_msg = error
+            message = error
         )
+
+class BaseModelParseException(Exception):
+    def __init__(
+        self, 
+        message: str = 'parse model exception'
+    ):
+        super().__init__(message)
