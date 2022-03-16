@@ -13,7 +13,7 @@ class BaseVkErrorException(Exception):
 
     def __init__(
         self,
-        response: Response = None,
+        response: Optional[Response] = None,
         error_code = None,
         message: str = 'unknown error'
     ):

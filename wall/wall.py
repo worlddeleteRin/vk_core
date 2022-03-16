@@ -86,14 +86,24 @@ class VkWall():
     def __init__(
         self,
         client,
-        owner_id: int = None,
-        domain: str = None
+        owner_id: int | None = None,
+        domain: str | None = None
     ):
         self.client = client
         if (owner_id is None) and (domain is None):
             raise Exception('specify owner_id or domain')
         self.owner_id = owner_id
         self.domain = domain
+
+    @staticmethod
+    def getOwnerItemIdsFromUrl(url: str) -> list[str] | None:
+        s = url.split('wall')
+        if len(s) < 2:
+            return None
+        items = s[1].split('_')
+        if len(items) < 2:
+            return None
+        return items
 
     def get(
         self,

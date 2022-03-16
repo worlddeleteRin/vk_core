@@ -13,6 +13,8 @@ wall = VkWall(
     domain = 'opasnayapechenka',
 )
 
+test_post_id = "-201355660_15259"
+
 def test_wall_get_posts():
     query = WallPostsGetQuery(
         count = 1
@@ -22,7 +24,7 @@ def test_wall_get_posts():
 
 def test_wall_get_by_id():
     query = WallPostGetByIdQuery(
-        posts = "-201355660_15259"
+        posts = test_post_id
     )
     posts = wall.getById(query)
     if len(posts) == 0:

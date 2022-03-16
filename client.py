@@ -34,6 +34,10 @@ class HttpModule():
                 )
             raise error
         response_success = response_dict.get('response')
+        if not response_success:
+            raise BaseVkErrorException.get_dummy_from_response(
+                response
+            )
         return BaseVkResponse(
             response = response_success
         )
