@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from httpx import Response
 
 from vk_core.client import VkClient
+from vk_core.likes.models import IsLikedResponse
 
 class LikeTargetEnum(str, Enum):
     post = 'post'
@@ -29,6 +30,11 @@ class AddLikeQuery(BaseModel):
 
 class IsLikedQuery(BaseModel):
     type: LikeTargetEnum
+    owner_id: int
+    item_id: int
+
+    class Config:
+        use_enum_values = True 
 
 class Likes:
     client: VkClient
@@ -42,8 +48,14 @@ class Likes:
     def isLiked(
         self,
         query: IsLikedQuery
-    ):
-        pass
+    ) -> IsLikedResponse:
+        resp: Response = self.client.http.client.get(
+            'likes.isLiked',
+            params = query.dict(exclude_none=True)
+        )
+        data = self.client.http.process_response(resp).response
+        return IsLikedResponse.process_from_response(data)
+
     def add(
         self,
         query: AddLikeQuery,
