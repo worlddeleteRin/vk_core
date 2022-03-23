@@ -40,6 +40,10 @@ class VkPost(BaseModel):
     # if of scheduled post if it was scheduled
     postponed_id: Optional[int] = None
 
+    def get_vk_post_link(self):
+        base = "https://vk.com/"
+        return f"{base}?w=wall-{self.owner_id}_{self.id}"
+
 # request & responses 
 class WallPostGetByIdQuery(BaseModel):
     # string of posts ids
