@@ -1,4 +1,4 @@
-from typing import Any, NewType, Optional
+from typing import An, NewType, Optional
 from pydantic import BaseModel
 from vk_core.client import VkClient
 from httpx import Response
