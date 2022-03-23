@@ -1,4 +1,4 @@
-from typing import An, NewType, Optional
+from typing import Any, NewType, Optional
 from pydantic import BaseModel
 from vk_core.client import VkClient
 from httpx import Response
@@ -86,8 +86,8 @@ class VkWall():
     def __init__(
         self,
         client,
-        owner_id: int | None = None,
-        domain: str | None = None
+        owner_id: Optional[int] = None,
+        domain: Optional[str] = None
     ):
         self.client = client
         if (owner_id is None) and (domain is None):
@@ -96,7 +96,7 @@ class VkWall():
         self.domain = domain
 
     @staticmethod
-    def getOwnerItemIdsFromUrl(url: str) -> list[str] | None:
+    def getOwnerItemIdsFromUrl(url: str) -> Optional[list[str]]:
         s = url.split('wall')
         if len(s) < 2:
             return None
