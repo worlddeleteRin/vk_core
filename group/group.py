@@ -6,12 +6,12 @@ from vk_core.group.exceptions import GroupNotFoundException
 from vk_core.models import BaseModelParseException
 from httpx import Response
 
-class GroupGetByIdQuery(BaseModel):
+class VkGroupGetByIdQuery(BaseModel):
     # groups ids/short names separated by comma
     groups_ids: Optional[str] = None
     group_id: str
 
-class GroupModel(BaseModel):
+class VkGroupModel(BaseModel):
     id: int
     name: str
     screen_name: str
@@ -40,12 +40,12 @@ class GroupModel(BaseModel):
         if not isinstance(resp, dict):
             raise parse_exception
 
-        return GroupModel(
+        return VkGroupModel(
             **resp
         )
 
 
-class Group():
+class VkGroup():
     client: VkClient
     group_id: str
 
@@ -59,10 +59,10 @@ class Group():
 
     def getById(
         self,
-        query: Optional[GroupGetByIdQuery] = None
+        query: Optional[VkGroupGetByIdQuery] = None
     ):
         if not query:
-            query = GroupGetByIdQuery(
+            query = VkGroupGetByIdQuery(
                 group_id = self.group_id
             )
         resp_raw: Response = self.client.http.client.get(
@@ -73,7 +73,7 @@ class Group():
         if not isinstance(resp, list):
             raise BaseModelParseException()
         # TODO: mb add process from response
-        groups = [GroupModel.process_from_response(g) for g in resp]
+        groups = [VkGroupModel.process_from_response(g) for g in resp]
         if len(groups) == 0:
             raise GroupNotFoundException()
         return groups[0]
