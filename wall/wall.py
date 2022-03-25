@@ -34,7 +34,7 @@ class VkPost(BaseModel):
     can_delete: Optional[int]
     can_edit: Optional[int]
     is_pinned: Optional[int]
-    marked_as_ads: int
+    marked_as_ads: Optional[int]
     is_favorite: bool
     donut: dict
     # if of scheduled post if it was scheduled
