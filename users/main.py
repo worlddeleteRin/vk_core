@@ -29,7 +29,7 @@ class VkUserModel(BaseModel):
 
 class VkGetUsersQuery(BaseModel):
     # string of users ids seprated by ,
-    user_ids: str
+    user_ids: Optional[str] = None
     # optional fields to return
     # TODO: make enum?
     fields: Optional[str] = None
