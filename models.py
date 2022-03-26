@@ -41,6 +41,7 @@ class BaseVkErrorException(Exception):
         request_log = f'{response.request}'
         error += f'{response_log} {request_log}'
         return BaseVkErrorException(
+            response = response,
             message = error
         )
 
