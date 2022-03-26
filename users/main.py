@@ -52,7 +52,7 @@ class VkUser(
     """
     def get(
         self,
-        query: VkGetUsersQuery
+        query: VkGetUsersQuery = VkGetUsersQuery()
     ):
         resp_raw: Response = self.client.http.client.get(
             url = 'users.get',
