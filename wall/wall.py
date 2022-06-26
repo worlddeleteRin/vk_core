@@ -42,7 +42,7 @@ class VkPost(BaseModel):
 
     def get_vk_post_link(self):
         base = "https://vk.com/"
-        return f"{base}?w=wall-{self.owner_id}_{self.id}"
+        return f"{base}?w=wall-{abs(self.owner_id)}_{self.id}"
 
 # request & responses 
 class WallPostGetByIdQuery(BaseModel):
